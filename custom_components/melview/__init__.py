@@ -47,7 +47,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: MelViewConfigEntry) -> b
     mv_auth = MelViewAuthentication(conf[CONF_EMAIL], conf[CONF_PASSWORD])
     result = await mv_auth.async_login()
     if not result:
-        _LOGGER.error("MelView authentication failed for %s", conf[CONF_EMAIL])
+        _LOGGER.error("MelView authentication failed")
         ir.async_create_issue(
             hass,
             DOMAIN,

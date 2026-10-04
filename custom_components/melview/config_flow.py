@@ -64,11 +64,13 @@ class FlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 auth = MelViewAuthentication(email, password)
                 valid = await auth.async_login()
         except (ClientError, asyncio.TimeoutError) as e:
-            _LOGGER.error("MelView auth error during config flow: %r", e)
+            _LOGGER.error("MelView auth error during config flow (%s)", type(e).__name__)
             error = "cannot_connect"
             valid = False
-        except Exception:  # pragma: no cover - unexpected
-            _LOGGER.exception("Unexpected MelView error during config flow")
+        except Exception as err:  # pragma: no cover - unexpected
+            _LOGGER.error(
+                "Unexpected MelView error during config flow (%s)", type(err).__name__
+            )
             valid = False
 
         if not valid:
@@ -157,7 +159,9 @@ class FlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     auth = MelViewAuthentication(email, user_input[CONF_PASSWORD])
                     valid = await auth.async_login()
             except (ClientError, asyncio.TimeoutError) as e:
-                _LOGGER.error("MelView auth error during reconfigure: %r", e)
+                _LOGGER.error(
+                    "MelView auth error during reconfigure (%s)", type(e).__name__
+                )
                 valid = False
                 error = "cannot_connect"
 
@@ -201,7 +205,9 @@ class FlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     auth = MelViewAuthentication(email, user_input[CONF_PASSWORD])
                     valid = await auth.async_login()
             except (ClientError, asyncio.TimeoutError) as e:
-                _LOGGER.error("MelView auth error during reauth: %r", e)
+                _LOGGER.error(
+                    "MelView auth error during reauth (%s)", type(e).__name__
+                )
                 valid = False
                 self._errors["base"] = "cannot_connect"
             if not valid:

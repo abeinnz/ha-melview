@@ -1,4 +1,3 @@
-import json
 import logging
 from datetime import timedelta
 
@@ -34,13 +33,9 @@ class MelViewCoordinator(DataUpdateCoordinator):
         try:
             if self._caps is None:
                 self._caps = await self.device.async_refresh_device_caps()
-                _LOGGER.debug(
-                    "Unit capabilities: %s", json.dumps(self.device._caps, indent=2)
-                )
             ok = await self.device.async_refresh_device_info()
             if not ok or self.device._json is None:
                 raise UpdateFailed("Failed to refresh MelView info")
-            _LOGGER.debug("Data: %s", json.dumps(self.device._json, indent=2))
             return self.device._json
         except Exception as err:
             raise UpdateFailed(str(err)) from err
